@@ -1,1 +1,35 @@
+name: Ejecutar mi programa cada dia
+
+on:
+  schedule:
+    - cron: '59 23 * * *' # Esto significa: todos los días a las 23:59
+  workflow_dispatch: # Esto sirve para que te aparezca un botón de "Ejecutar ahora" y puedas probarlo
+
+jobs:
+  tarea_diaria:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+    
+    steps:
+      - name: 1. Copiar mis archivos al robot
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 3. Instalar librerias 
+        run: pip install requests
+
+      - name: 4. Ejecutar mi programa
+        run: python tiempo.py 
+
+      - name: 5. Guardar el archivo .json en el repositorio
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Nuevo reporte diario generado"
+          file_pattern: '*.json' # Esto busca cualquier archivo .json que haya creado tu programa
+
 
