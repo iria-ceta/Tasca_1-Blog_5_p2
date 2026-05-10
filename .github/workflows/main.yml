@@ -2,17 +2,20 @@ name: Ejecutar mi programa cada dia
 
 on:
   schedule:
-    - cron: '59 23 * * *' # Se ejecuta a las 23:59 todos los días
-  workflow_dispatch: # Esto te permite darle a un botón para probarlo ahora
+    - cron: '59 23 * * *'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   tarea_diaria:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permiso para que el robot pueda subir el archivo generado
+      contents: write
     
     steps:
-      - name: 1. Descargar mi codigo de GitHub
+      - name: 1. Descargar mi codigo
         uses: actions/checkout@v4
 
       - name: 2. Preparar Python
@@ -20,11 +23,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: 3. Ejecutar mi script de tiempo
-        run: python tiempo.py # Ejecuta tu archivo tiempo.py
+      - name: 3. Ejecutar mi script
+        run: python tiempo.py
 
-      - name: 4. Guardar y subir el archivo generado
+      - name: 4. Guardar y subir el archivo
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Nuevo reporte de temperaturas"
-          file_pattern: '*.json *.txt' # Guarda cualquier archivo .json o .txt que se cree
+          file_pattern: '.' # El punto significa "guarda cualquier cambio que encuentres"
